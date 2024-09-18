@@ -10,7 +10,7 @@ import torch
 from hydra import initialize, compose
 from hydra.utils import instantiate
 from omegaconf import OmegaConf
-
+from hydra.core.global_hydra import GlobalHydra
 
 def build_sam2(
     config_file,
@@ -21,6 +21,8 @@ def build_sam2(
     apply_postprocessing=True,
     **kwargs,
 ):
+    if GlobalHydra.instance().is_initialized():
+        GlobalHydra.instance().clear()
     with initialize(config_path="../sam2_configs", version_base="1.2"):
         if apply_postprocessing:
             hydra_overrides_extra = hydra_overrides_extra.copy()
